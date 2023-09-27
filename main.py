@@ -5,12 +5,11 @@ from io import BytesIO
 from PIL import Image, ImageFile, ImageFilter
 import argparse
 
-from eraseid_api_v1 import start_call, upload_and_detect_call, selection_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, replace_call
+from eraseid_api import start_call, upload_and_detect_call, selection_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, replace_call
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
 
 
 if __name__ == '__main__':
-
 
     parser = argparse.ArgumentParser()
 
