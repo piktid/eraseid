@@ -56,14 +56,14 @@ url = 'your-url'
 
 > **Step 4** - Run the main function
 ```bash
-$ python3 eraseid_main.py
+$ python3 main.py
 ```
 
 Without any additional argument, EraseID only changes the first face it finds in your image, and provides the result asynchronously. 
 If you want to change also the hair, change all the faces in the photo and call the server synchronously, use the following command:
 
 ```bash
-$ python3 eraseid_main.py --hair --all_faces --sync
+$ python3 main.py --hair --all_faces --sync
 ```
 
 ## Contact
