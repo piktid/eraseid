@@ -47,7 +47,7 @@ $ export ERASEID_EMAIL={Your email here}
 $ export ERASEID_PASSWORD={Your password here}
 ```
 
-> **Step 3** - Change in eraseid_main.py the URL of the image (containing people) to be anonymized
+> **Step 3** - Change in main.py the URL of the image (containing people) to be anonymized
 ```python
 ...
 url = 'your-url'
