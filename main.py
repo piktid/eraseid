@@ -5,35 +5,37 @@ from io import BytesIO
 from PIL import Image, ImageFile, ImageFilter
 import argparse
 
-from eraseid_api import start_call, upload_and_detect_call, selection_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, replace_call
+from eraseid_api import start_call, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
 
 
 if __name__ == '__main__':
+
 
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--hair', help='Change also the hair', action='store_true')
     parser.add_argument('--all_faces', help='Change all the faces in the photo', action='store_true')
     parser.add_argument('--sync', help='Use synchronous calls', action='store_true')
+    parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
+    parser.add_argument('--store_identity', help='Use the face from the stored identities', action='store_true')
 
     args = parser.parse_args()
 
     # be sure to export your email and psw as environmental variables
     EMAIL = os.getenv("ERASEID_EMAIL")
     PASSWORD = os.getenv("ERASEID_PASSWORD")
-
     # Parameters
     CHANGE_HAIR = args.hair # False if only the face is anonymized, True if both face and hair
     CHANGE_ALL_FACES = args.all_faces # False if only a subset of the faces in the image need to be anonymize, True if all the faces
     FLAG_SYNC = args.sync # False if the API call is asynchronous, True otherwise, which means that the program will wait for the server's answer
+    IDENTITY_NAME = args.identity_name # Default is None, otherwise a string of a stored name
+    STORE_IDENTITY_FLAG = args.store_identity # False if the new identity shall not be saved in the user profile, viceversa True
 
     ## START
     # insert the URL of the image to anonymize
-    # photo of a girl
-    url = 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-    # photo with 3 persons
-    #url = 'https://images.pexels.com/photos/8790786/pexels-photo-8790786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    url = 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' # photo of a girl
+    #url = 'https://images.pexels.com/photos/8790786/pexels-photo-8790786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' # photo with 3 persons
     input_img = Image.open(BytesIO(requests.get(url,stream=False).content))
 
     # start the call
@@ -77,6 +79,15 @@ if __name__ == '__main__':
     """
     # -------------------------
 
+    # IDENTITIES
+    # if you want to get the list of the identities stored in your profile, uncomment the following lines
+    """
+    if IDENTITY_NAME is not None:
+        # get available identities
+        identity_list = get_identities_call(TOKEN)
+        print(f'List of available identity names:{identity_list}')
+    """
+
     # do the generation process
     j = 0
     for idx_face in idx_faces:
@@ -85,10 +96,10 @@ if __name__ == '__main__':
         keywords_to_send = keywords_list[j]
         keywords_to_send = json.dumps(keywords_to_send.get('a'))
 
-        response = generation_call(image_id, idx_face, keywords_to_send, TOKEN, FLAG_SYNC)
+        response = generation_call(image_id, idx_face, keywords_to_send, IDENTITY_NAME, TOKEN, FLAG_SYNC)
 
         if FLAG_SYNC:
-            # Syncronous API call
+            # Synchronous API call
             a = (response.get('links')).get('list')
             b = a[0].get('g')
             # select the idx of the generation to replace
@@ -106,6 +117,14 @@ if __name__ == '__main__':
             # select the idx of the generation to replace
             idx_generation_to_replace = [get_last_generated_face(list_generated_faces.get('links'), idx_face)]
             print(f'Replace generation {idx_generation_to_replace}')
+
+        # Store the last generated face as 'pippo'
+        if IDENTITY_NAME is None:
+            if STORE_IDENTITY_FLAG:
+                new_identity_name = 'pippo' # choose your name, call it afterwards
+                idx_generation = idx_generation_to_replace[-1]
+                # set only the last generated as identity for the future
+                response = set_identity_call(image_id, idx_face, idx_generation, keywords_to_send, new_identity_name, TOKEN)
 
         links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN)
         j = j+1
