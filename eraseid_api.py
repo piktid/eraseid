@@ -10,8 +10,7 @@ from time import sleep
 from requests_toolbelt import MultipartEncoder
 
 
-#URL_API = 'https://api.piktid.com/api'
-URL_API = 'http://localhost:5001/api'
+URL_API = 'https://api.piktid.com/api'
 
 ## -----------READ/WRITE FUNCTIONS------------
 def open_image_from_url(url):
@@ -202,7 +201,7 @@ def detete_notification(notification_id, TOKEN):
                             json={},
                             #timeout=100,
                             )
-    print(response.text)
+    #print(response.text)
     return response.text
 
 def handle_notifications_new_generation(image_id, idx_face, TOKEN):
@@ -217,7 +216,7 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN):
 
         # remove notifications
         result_delete = [detete_notification(n.get('id'), TOKEN) for n in notifications ]
-        print(result_delete)
+        #print(result_delete)
 
         if result.count(True)>0:
             print(f'generation for face {idx_face} completed')

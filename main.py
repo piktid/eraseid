@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('--all_faces', help='Change all the faces in the photo', action='store_true')
     parser.add_argument('--sync', help='Use synchronous calls', action='store_true')
     parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
-    parser.add_argument('--store_identity', help='Use the face from the stored identities', action='store_true')
+    parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
 
     args = parser.parse_args()
 
@@ -80,13 +80,15 @@ if __name__ == '__main__':
     # -------------------------
 
     # IDENTITIES
-    # if you want to get the list of the identities stored in your profile, uncomment the following lines
-    """
+    # check if the input identity is available from your database
     if IDENTITY_NAME is not None:
         # get available identities
         identity_list = get_identities_call(TOKEN)
         print(f'List of available identity names:{identity_list}')
-    """
+        if IDENTITY_NAME not in identity_list:
+            # Error, stop the entire process
+            print(f'The identity named {IDENTITY_NAME} is not available in your database of identities, generating a random one..')
+            IDENTITY_NAME = None
 
     # do the generation process
     j = 0
