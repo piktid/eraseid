@@ -66,5 +66,22 @@ If you want to change also the hair, change all the faces in the photo and call 
 $ python3 main.py --hair --all_faces --sync
 ```
 
+## Consistent identity
+It is now possible to use the same generated identity in multiple photos! 
+To save the generated identity into your database, use the command:
+
+```bash
+$ python3 main.py --store_identity
+```
+
+The identity will be stored as 'pippo'. The name is hard-coded but you can change it.
+If you want to reuse 'pippo' in different photos, use the command:
+
+```bash
+$ python3 main.py --identity_name 'pippo'
+```
+
+Different face enhancers are available, at the moment GFPGAN starts as default.
+
 ## Contact
 office@piktid.com

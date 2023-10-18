@@ -82,12 +82,17 @@ if __name__ == '__main__':
     # IDENTITIES
     # check if the input identity is available from your database
     if IDENTITY_NAME is not None:
-        # get available identities
-        identity_list = get_identities_call(TOKEN)
-        print(f'List of available identity names:{identity_list}')
-        if IDENTITY_NAME not in identity_list:
-            # Error, stop the entire process
-            print(f'The identity named {IDENTITY_NAME} is not available in your database of identities, generating a random one..')
+        # get available identities, if the call does not work, proceed without that parameter
+        try:
+            identity_list = get_identities_call(TOKEN)
+            print(f'List of available identity names:{identity_list}')
+            if IDENTITY_NAME not in identity_list:
+                # Error, stop the entire process
+                print(f'The identity named {IDENTITY_NAME} is not available in your database of identities, generating a random one..')
+                IDENTITY_NAME = None
+        except Exception as inst:
+            #print(f'ERROR. {str(type(inst))}, {str(inst.args)}, {str(inst)}')
+            print('APIs are probably not updated to the latest version, generating a new identity')
             IDENTITY_NAME = None
 
     # do the generation process
