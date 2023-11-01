@@ -10,7 +10,9 @@ from time import sleep
 from requests_toolbelt import MultipartEncoder
 
 
-URL_API = 'https://api.piktid.com/api'
+#URL_API = 'https://api.piktid.com/api'
+URL_API = 'http://localhost:5001/api'
+
 
 ## -----------READ/WRITE FUNCTIONS------------
 def open_image_from_url(url):
@@ -88,12 +90,14 @@ def upload_and_detect_call(src_img, HAIR_FACTOR, TOKEN):
                             data=m,
                             )
 
+    # if no faces, 405 error
     response_json = json.loads(response.text)
 
     image_address = response_json.get('image_id') # image id
     faces_dict = response_json.get('faces') # faces dictionary
     indices_info = faces_dict.get('coordinates_list')
-    selected_faces_list = faces_dict.get('selected_faces')
+    selected_faces_list = faces_dict.get('selected_faces') # faces that can be modified
+    number_of_faces = faces_dict.get('number_of_faces') # information about the number of faces
 
     return image_address, indices_info, selected_faces_list
 

@@ -113,7 +113,7 @@ if __name__ == '__main__':
             idx_generation_to_replace = [b]
 
         else:
-            # Asyncronous API call
+            # Asynchronous API call
             response_notifications = handle_notifications_new_generation(image_id, idx_face, TOKEN)
             if response_notifications == False:
                 # Error
