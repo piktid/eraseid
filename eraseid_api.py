@@ -10,8 +10,7 @@ from time import sleep
 from requests_toolbelt import MultipartEncoder
 
 
-#URL_API = 'https://api.piktid.com/api'
-URL_API = 'http://localhost:5001/api'
+URL_API = 'https://api.piktid.com/api'
 
 
 ## -----------READ/WRITE FUNCTIONS------------
