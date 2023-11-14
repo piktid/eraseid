@@ -66,7 +66,7 @@ If you want to change also the hair, change all the faces in the photo and call 
 $ python3 main.py --hair --all_faces --sync
 ```
 
-## Consistent identity
+## Consistent identity (PRO feature)
 It is now possible to use the same generated identity in multiple photos! 
 To save the generated identity into your database, use the command:
 
