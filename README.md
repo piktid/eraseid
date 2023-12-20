@@ -47,16 +47,18 @@ $ export ERASEID_EMAIL={Your email here}
 $ export ERASEID_PASSWORD={Your password here}
 ```
 
-> **Step 3** - Change in main.py the URL of the image (containing people) to be anonymized
+> **Step 3** - You can either provide the URL or the absolute path of the image (containing people). Add the arguments
 ```python
 ...
-url = 'your-url'
+--url 'your-url'
+or
+--filepath 'mydir/myfile.jpg'
 ...
 ```
 
 > **Step 4** - Run the main function
 ```bash
-$ python3 main.py
+$ python3 main.py --url 'your-url'
 ```
 
 Without any additional argument, EraseID only changes the first face it finds in your image, and provides the result asynchronously. 
@@ -66,7 +68,7 @@ If you want to change also the hair, change all the faces in the photo and call 
 $ python3 main.py --hair --all_faces --sync
 ```
 
-## Consistent identity (PRO feature)
+## Consistent identity (premium feature)
 It is now possible to use the same generated identity in multiple photos! 
 To save the generated identity into your database, use the command:
 

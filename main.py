@@ -1,11 +1,11 @@
 import os
-import requests
+import sys
 import json
 from io import BytesIO
 from PIL import Image, ImageFile, ImageFilter
 import argparse
 
-from eraseid_api import start_call, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from eraseid_api import open_image_from_url, open_image_from_path, start_call, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
 
 
@@ -19,12 +19,15 @@ if __name__ == '__main__':
     parser.add_argument('--sync', help='Use synchronous calls', action='store_true')
     parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
     parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
+    parser.add_argument('--url', help='Image file url', type=str, default='https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+    parser.add_argument('--filepath', help='Image file absolute path', type=str, default=None)
 
     args = parser.parse_args()
 
     # be sure to export your email and psw as environmental variables
     EMAIL = os.getenv("ERASEID_EMAIL")
     PASSWORD = os.getenv("ERASEID_PASSWORD")
+
     # Parameters
     CHANGE_HAIR = args.hair # False if only the face is anonymized, True if both face and hair
     CHANGE_ALL_FACES = args.all_faces # False if only a subset of the faces in the image need to be anonymize, True if all the faces
@@ -32,13 +35,26 @@ if __name__ == '__main__':
     IDENTITY_NAME = args.identity_name # Default is None, otherwise a string of a stored name
     STORE_IDENTITY_FLAG = args.store_identity # False if the new identity shall not be saved in the user profile, viceversa True
 
-    ## START
-    # insert the URL of the image to anonymize
-    url = 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' # photo of a girl
-    #url = 'https://images.pexels.com/photos/8790786/pexels-photo-8790786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' # photo with 3 persons
-    input_img = Image.open(BytesIO(requests.get(url,stream=False).content))
+    # load the image
+    URL = args.url 
+    IMAGE_PATH = args.filepath
+    
+    if IMAGE_PATH is not None:
+        if os.path.exists(IMAGE_PATH):
+            input_img = open_image_from_path(IMAGE_PATH)
+            print(f'Using as input image the file located at: {IMAGE_PATH}')
+        else:
+            print('Wrong filepath, check again')
+            sys.exit()
+    else:
+        try:
+            input_img = open_image_from_url(URL)
+            print(f'Using as input image the file located at: {URL}')
+        except:
+            print('Wrong URL, check again')
+            sys.exit()
 
-    # start the call
+    # log in
     TOKEN = start_call(EMAIL, PASSWORD)
     HAIR_FACTOR = 1 if CHANGE_HAIR else 0
 
@@ -137,6 +153,6 @@ if __name__ == '__main__':
         j = j+1
 
     # download the output from EraseID
-    output_img = Image.open(requests.get(links[-1],stream=True).raw)
+    output_img = open_image_from_url(links[-1])
     print(f'Download the generated image here: {links[-1]}')
 

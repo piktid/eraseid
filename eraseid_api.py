@@ -22,10 +22,11 @@ def open_image_from_url(url):
     image = Image.open(BytesIO(response.content))
     return image
 
-def open_image_from_url_bytes(url, only_face=False):
-    response = requests.get(url, stream=True)
-    if not response.ok:
-        print(response)
+def open_image_from_path(path):
+    f = open(path, 'rb')
+    buffer = BytesIO(f.read())
+    image = Image.open(buffer)
+    return image
 
     return BytesIO(response.content)
 
