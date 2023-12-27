@@ -298,7 +298,7 @@ def get_notification_by_name(name_list, TOKEN_DICTIONARY):
     response_json = json.loads(response.text)
     return response_json
 
-def detete_notification(notification_id, TOKEN_DICTIONARY):
+def delete_notification(notification_id, TOKEN_DICTIONARY):
     TOKEN = TOKEN_DICTIONARY.get('access_token','')
     print(f'notification_id: {notification_id}')
     response = requests.delete(URL_API+'/notification/'+str(notification_id),
@@ -331,7 +331,7 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
 
         print(f'notifications_to_remove: {notifications_to_remove}')
         # remove notifications
-        result_delete = [detete_notification(n.get('id'), TOKEN_DICTIONARY) for n in notifications_to_remove ]
+        result_delete = [delete_notification(n.get('id'), TOKEN_DICTIONARY) for n in notifications_to_remove ]
         #print(result_delete)
 
         if len(notifications_to_remove)>0:
