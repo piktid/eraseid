@@ -55,11 +55,11 @@ if __name__ == '__main__':
             sys.exit()
 
     # log in
-    TOKEN = start_call(EMAIL, PASSWORD)
+    TOKEN_DICTIONARY = start_call(EMAIL, PASSWORD)
     HAIR_FACTOR = 1 if CHANGE_HAIR else 0
 
     # upload
-    image_id, indices_info, selected_faces_list = upload_and_detect_call(input_img,HAIR_FACTOR,TOKEN)
+    image_id, indices_info, selected_faces_list = upload_and_detect_call(input_img,HAIR_FACTOR,TOKEN_DICTIONARY)
 
     # select the indices of the faces to change
     idx_faces_comma_separated = (','.join(str(x) for x in range(len(indices_info)))) if CHANGE_ALL_FACES else '0' # use '0,1,2' if you want to modify the first 3 faces
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     selected_faces_list_str = (','.join(str(x) for x in selected_faces_list))
 
     # get the keywords for each face
-    keywords_list = selection_call(image_id, selected_faces_list_str, TOKEN)
+    keywords_list = selection_call(image_id, selected_faces_list_str, TOKEN_DICTIONARY)
 
     # KEYWORDS
     # if you want to change the keywords, uncomment the next lines and select the index of the face and read the keywords
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     if IDENTITY_NAME is not None:
         # get available identities, if the call does not work, proceed without that parameter
         try:
-            identity_list = get_identities_call(TOKEN)
+            identity_list = get_identities_call(TOKEN_DICTIONARY)
             print(f'List of available identity names:{identity_list}')
             if IDENTITY_NAME not in identity_list:
                 # Error, stop the entire process
@@ -119,7 +119,7 @@ if __name__ == '__main__':
         keywords_to_send = keywords_list[j]
         keywords_to_send = json.dumps(keywords_to_send.get('a'))
 
-        response = generation_call(image_id, idx_face, keywords_to_send, IDENTITY_NAME, TOKEN, FLAG_SYNC)
+        response = generation_call(image_id, idx_face, keywords_to_send, IDENTITY_NAME, TOKEN_DICTIONARY, FLAG_SYNC)
 
         if FLAG_SYNC:
             # Synchronous API call
@@ -130,12 +130,12 @@ if __name__ == '__main__':
 
         else:
             # Asynchronous API call
-            response_notifications = handle_notifications_new_generation(image_id, idx_face, TOKEN)
+            response_notifications = handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY)
             if response_notifications == False:
                 # Error
                 break
 
-            list_generated_faces = get_generated_faces(image_id, idx_face, TOKEN)
+            list_generated_faces = get_generated_faces(image_id, idx_face, TOKEN_DICTIONARY)
 
             # select the idx of the generation to replace
             idx_generation_to_replace = [get_last_generated_face(list_generated_faces.get('links'), idx_face)]
@@ -147,9 +147,9 @@ if __name__ == '__main__':
                 new_identity_name = 'pippo' # choose your name, call it afterwards
                 idx_generation = idx_generation_to_replace[-1]
                 # set only the last generated as identity for the future
-                response = set_identity_call(image_id, idx_face, idx_generation, keywords_to_send, new_identity_name, TOKEN)
+                response = set_identity_call(image_id, idx_face, idx_generation, keywords_to_send, new_identity_name, TOKEN_DICTIONARY)
 
-        links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN)
+        links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN_DICTIONARY)
         j = j+1
 
     # download the output from EraseID
