@@ -47,6 +47,7 @@ if __name__ == '__main__':
     GUIDANCE_SCALE = args.guidance_scale
     PROMPT_STRENGTH = args.prompt_strength
     CONTROLNET_SCALE = args.controlnet_scale
+    SEED = args.seed
 
     # Image parameters
     URL = args.url 
