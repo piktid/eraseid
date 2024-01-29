@@ -71,7 +71,6 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
         try:
             print(f'Running process single face on face:{idx_face}')
             response = process_single_face(idx_face, j, PARAM_DICTIONARY, TOKEN_DICTIONARY)
-            print(response)
         except Exception as inst:
             print(f'type:{type(inst)}, args:{inst.args}, {inst}')
             print(f'Error in process_single_face')

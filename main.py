@@ -86,4 +86,3 @@ if __name__ == '__main__':
         }
 
     response = process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY) 
-    print(response)  
