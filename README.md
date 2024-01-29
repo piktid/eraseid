@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID
+# EraseID - v2.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -68,7 +68,7 @@ If you want to change also the hair and change all the faces in the photo, use t
 $ python3 main.py --hair --all_faces
 ```
 
-## Consistent identity (premium feature)
+## Consistent identity 2.0 (premium feature)
 It is now possible to use the same generated identity in multiple photos! 
 To save the generated identity into your database, use the command:
 
@@ -82,8 +82,6 @@ If you want to reuse 'pippo' in different photos, use the command:
 ```bash
 $ python3 main.py --identity_name 'pippo'
 ```
-
-Different face enhancers are available, at the moment GFPGAN starts as default.
 
 ## Contact
 office@piktid.com
