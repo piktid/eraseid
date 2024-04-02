@@ -260,24 +260,6 @@ def get_last_generated_face(list_of_generated_faces, idx_face):
     return list_of_generated_faces[number_of_generations-1].get('g')
 
 
-def upscaling_call(image_address, idx_face, idx_generation, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
-
-    TOKEN = TOKEN_DICTIONARY.get('access_token','')
-    URL_API = TOKEN_DICTIONARY.get('url_api')
-
-    upscaler_type = PARAM_DICTIONARY.get('UPSCALER_TYPE')
-    upscaling_mode = PARAM_DICTIONARY.get('UPSCALING_MODE')
-    scale_factor = PARAM_DICTIONARY.get('SCALE_FACTOR')
-    prompt_strength = PARAM_DICTIONARY.get('UP_STRENGTH')
-
-    response = requests.post(URL_API+'/upscaler', 
-                            headers={'Authorization': 'Bearer '+TOKEN},
-                            json={'id_image': image_address,'id_face': idx_face, 'id_generation': idx_generation, 'prompt': prompt, 'upscaler_type' : upscaler_type, 'upscaling_mode': upscaling_mode, 'scale_factor' : scale_factor, 'prompt_strength':prompt_strength},
-                            )
-    response_json = json.loads(response.text)
-
-    return response_json
-
 # SAVE NEW FACES AS NEW IDENTITIES
 def set_identity_call(image_address, idx_face, idx_generation, prompt, identity_name, TOKEN_DICTIONARY):
     # save the generated identity in the user profile for future use
@@ -336,7 +318,7 @@ def get_notification_by_name(name_list, TOKEN_DICTIONARY):
     TOKEN = TOKEN_DICTIONARY.get('access_token','')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
-    response = requests.post(URL_API+'/notification_by_name',
+    response = requests.post(URL_API+'/notification_by_name_json',
                             headers={'Authorization': 'Bearer '+TOKEN},
                             json={'name_list':name_list},
                             #timeout=100,
@@ -346,23 +328,23 @@ def get_notification_by_name(name_list, TOKEN_DICTIONARY):
         # try with new TOKEN
         TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
         TOKEN = TOKEN_DICTIONARY.get('access_token','')
-        response = requests.post(URL_API+'/notification_by_name',
+        response = requests.post(URL_API+'/notification_by_name_json',
             headers={'Authorization': 'Bearer '+TOKEN},
             json={'name_list':name_list},
             #timeout=100,
         )
 
     response_json = json.loads(response.text)
-    return response_json
+    return response_json.get('notifications_list')
 
 def delete_notification(notification_id, TOKEN_DICTIONARY):
     TOKEN = TOKEN_DICTIONARY.get('access_token','')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
     print(f'notification_id: {notification_id}')
-    response = requests.delete(URL_API+'/notification/'+str(notification_id),
+    response = requests.delete(URL_API+'/notification/delete_json',
                             headers={'Authorization': 'Bearer '+TOKEN},
-                            json={},
+                            json={'id':notification_id},
                             #timeout=100,
                             )
     # if the access token is expired
@@ -370,9 +352,9 @@ def delete_notification(notification_id, TOKEN_DICTIONARY):
         # try with new TOKEN
         TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
         TOKEN = TOKEN_DICTIONARY.get('access_token','')
-        response = requests.delete(URL_API+'/notification/'+str(notification_id),
+        response = requests.delete(URL_API+'/notification/delete_json',
             headers={'Authorization': 'Bearer '+TOKEN},
-            json={},
+            json={'id':notification_id},
             #timeout=100,
         )
 
