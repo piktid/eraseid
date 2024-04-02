@@ -6,7 +6,7 @@ from random import randint
 from PIL import Image, ImageFile, ImageFilter
 
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
-from eraseid_api import open_image_from_url, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, upscaling_call, set_identity_call, replace_call
+from eraseid_api import open_image_from_url, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 
 def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
