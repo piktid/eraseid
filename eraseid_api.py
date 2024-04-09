@@ -66,6 +66,7 @@ def start_call(email, password):
     # Get token
 
     URL_API = 'https://api.piktid.com/api'
+
     print(f'Logging to: {URL_API}')
 
     response = requests.post(URL_API+'/tokens', data={}, auth=(email, password))
@@ -128,6 +129,35 @@ def upload_and_detect_call(src_img, HAIR_FACTOR, TOKEN_DICTIONARY):
     number_of_faces = faces_dict.get('number_of_faces') # information about the number of faces
 
     return image_address, indices_info, selected_faces_list
+
+def upload_reference_face_call(src_img, identity_name, TOKEN_DICTIONARY):
+    # upload the image into PiktID's servers
+    TOKEN = TOKEN_DICTIONARY.get('access_token','')
+    URL_API = TOKEN_DICTIONARY.get('url_api')
+
+    src_img_B = im_2_buffer(src_img)
+
+    m = MultipartEncoder(
+    fields={'identity_name': identity_name, 'file': ('file', src_img_B, 'text/plain')})
+
+    response = requests.post(URL_API+'/upload_identity',
+                            headers={"Content-Type": m.content_type,
+                                     'Authorization': 'Bearer '+TOKEN},
+                            data=m,
+                            )
+    # if the access token is expired
+    if response.status_code == 401:
+        TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
+        TOKEN = TOKEN_DICTIONARY.get('access_token','')
+        # try with new TOKEN
+        response = requests.post(URL_API+'/upload_identity',
+                            headers={"Content-Type": m.content_type,
+                                     'Authorization': 'Bearer '+TOKEN},
+                            data=m,
+                            )
+    print(response.content)
+    response_json = json.loads(response.text)
+    return response_json
 
 # SELECT FACES
 def selection_call(image_id, selected_faces_list, TOKEN_DICTIONARY):

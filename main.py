@@ -20,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--url', help='Image file url', type=str, default='https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
     parser.add_argument('--filepath', help='Input image file absolute path', type=str, default=None)
 
+    parser.add_argument('--identity_filepath', help='Input identity file absolute path', type=str, default=None)
     parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
     parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
 
@@ -40,6 +41,7 @@ if __name__ == '__main__':
     CHANGE_ALL_FACES = args.all_faces # False if only a subset of the faces in the image need to be anonymize, True if all the faces
 
     # Consistent identity parameters
+    IDENTITY_PATH = args.identity_filepath
     IDENTITY_NAME = args.identity_name # Default is None, otherwise a string of a stored name
     STORE_IDENTITY_FLAG = args.store_identity # False if the new identity shall not be saved in the user profile, viceversa True
 
@@ -68,6 +70,14 @@ if __name__ == '__main__':
             print('Wrong URL, check again')
             sys.exit()
 
+    if IDENTITY_PATH is not None:
+        if os.path.exists(IDENTITY_PATH):
+            identity_image = open_image_from_path(IDENTITY_PATH)
+            print(f'Using the input identity file located at: {IDENTITY_PATH}')
+        else:
+            print('Wrong identity filepath, check again')
+            sys.exit()
+
     # log in
     TOKEN_DICTIONARY = start_call(EMAIL, PASSWORD)
 
@@ -77,6 +87,7 @@ if __name__ == '__main__':
             'INPUT_PATH':INPUT_PATH,
             'HAIR_FACTOR':HAIR_FACTOR,
             'CHANGE_ALL_FACES':CHANGE_ALL_FACES,
+            'IDENTITY_IMAGE':identity_image,
             'IDENTITY_NAME':IDENTITY_NAME,
             'STORE_IDENTITY_FLAG':STORE_IDENTITY_FLAG,
             'SEED':SEED,
