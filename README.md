@@ -84,6 +84,10 @@ $ python3 main.py --identity_name 'pippo'
 ```
 
 ## Consistent identity (swap real faces, only for VERIFIED users)
+<a target="_blank" href="https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
 It is also possible to use the same real identity from a source image into multiple target photos. To avoid malicious uses, only verified trusted users have access to this feature. If you are interested, please contact us via Discord.
 To use a real identity from a source photo 'mydir/myfile.jpg', use the command:
 
@@ -98,10 +102,10 @@ If you want to swap also the hair, use the command
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --hair
 ```
 
-We have created a dedicated Colab Notebook for the consistent identity feature: <a target="_blank" href="https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
-
+It is possible to change the default generation parameters, to do that use the command (you need to be a premium user)
+```bash
+$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --guidance_scale '1.5' --controlnet_scale '0.1' --prompt_strength '0.5'
+```
 
 ## Keep identity (instructions coming soon)
 It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised face.

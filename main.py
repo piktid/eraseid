@@ -77,6 +77,8 @@ if __name__ == '__main__':
         else:
             print('Wrong identity filepath, check again')
             sys.exit()
+    else:
+        identity_image = None
 
     # log in
     TOKEN_DICTIONARY = start_call(EMAIL, PASSWORD)
