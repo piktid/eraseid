@@ -6,13 +6,20 @@ from random import randint
 from PIL import Image, ImageFile, ImageFilter
 
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
-from eraseid_api import open_image_from_url, upload_and_detect_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from eraseid_api import open_image_from_url, upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 
 def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
+    IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
+    IDENTITY_IMAGE = PARAM_DICTIONARY.get('IDENTITY_IMAGE')
+
+    # upload the source identity (swap feature), if any
+    if IDENTITY_IMAGE is not None and IDENTITY_NAME is not None:
+        response = upload_reference_face_call(IDENTITY_IMAGE, IDENTITY_NAME, TOKEN_DICTIONARY)
+        print(f'Identity: {IDENTITY_NAME} correctly uploaded to PiktID servers')
+
     CHANGE_ALL_FACES = PARAM_DICTIONARY.get('CHANGE_ALL_FACES')
     HAIR_FACTOR = PARAM_DICTIONARY.get('HAIR_FACTOR')
-    IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
 
     # upload
     print('Uploading the image')
