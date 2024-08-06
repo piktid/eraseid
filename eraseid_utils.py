@@ -1,6 +1,5 @@
 import json
 
-from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
 from eraseid_api import open_image_from_url, upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from cfe_keywords import cfe_dict
 
@@ -101,7 +100,7 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     image_id = PARAM_DICTIONARY.get('IMAGE_ID')
 
-    # add a keyword
+    # add a keyword, check on id.piktid.com all the available keywords
     # KEYWORDS_LIST[count]['a'] = {**KEYWORDS_LIST[count]['a'], 'Skin':'highly detailed'}
 
     if CHANGE_EXPRESSION_FLAG:

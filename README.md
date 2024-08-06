@@ -68,17 +68,6 @@ If you want to change also the hair and change all the faces in the photo, use t
 $ python3 main.py --hair --all_faces
 ```
 
-## Change facial expression (keeping the identity)
-<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
-It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
-Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
-
-```bash
-$ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
-
-```
 ## Consistent identity (swap generated faces)
 It is now possible to use the same generated identity in multiple photos! 
 To save the generated identity into your database, use the command:
@@ -116,6 +105,18 @@ $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfil
 It is possible to change the default generation parameters, to do that use the command (you need to be a premium user)
 ```bash
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --guidance_scale '1.5' --controlnet_scale '0.1' --prompt_strength '0.5'
+```
+
+## Change facial expression (keeping the identity)
+<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
+Choose the EXPRESSION value from the ones available in 'cfe_keywords.py'
+
+```bash
+$ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
 ```
 
 ## Contact
