@@ -113,7 +113,7 @@ $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfil
 </a>
 
 It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
-Choose the EXPRESSION value from the ones available in 'cfe_keywords.py'
+Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
 
 ```bash
 $ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
