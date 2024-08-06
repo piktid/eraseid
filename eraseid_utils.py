@@ -1,12 +1,16 @@
-import os
-import sys
 import json
-from io import BytesIO
-from random import randint
-from PIL import Image, ImageFile, ImageFilter
 
 from keywords import country_list, gender_list, emotion_list, mouth_list, nose_list
 from eraseid_api import open_image_from_url, upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from cfe_keywords import cfe_dict
+
+
+def find_key_by_value(target_value):
+    for key, values in cfe_dict.items():
+        if target_value in values:
+            return key
+    return None
+
 
 def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
@@ -27,7 +31,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     print(f'image id: {IMAGE_ID}')
 
-    PARAM_DICTIONARY = {**PARAM_DICTIONARY,'IMAGE_ID': IMAGE_ID}
+    PARAM_DICTIONARY = {**PARAM_DICTIONARY, 'IMAGE_ID': IMAGE_ID}
 
     # select the indices of the faces to change
     idx_faces_comma_separated = (','.join(str(x) for x in range(len(indices_info)))) if CHANGE_ALL_FACES else '0' # use '0,1,2' if you want to modify the first 3 faces
@@ -35,7 +39,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     
     if CHANGE_ALL_FACES:
         selected_faces_list = [1]*len(selected_faces_list)
-        idx_faces = [*range(0,len(selected_faces_list))]
+        idx_faces = [*range(0, len(selected_faces_list))]
 
     else:
         idx_faces = []
@@ -51,7 +55,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     print('Selecting the faces')
     KEYWORDS_LIST = selection_call(IMAGE_ID, selected_faces_list_str, TOKEN_DICTIONARY)
 
-    PARAM_DICTIONARY = {**PARAM_DICTIONARY,'KEYWORDS_LIST': KEYWORDS_LIST}
+    PARAM_DICTIONARY = {**PARAM_DICTIONARY, 'KEYWORDS_LIST': KEYWORDS_LIST}
 
     # IDENTITIES
     # check if the input identity is available from your database
@@ -66,7 +70,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
                 IDENTITY_NAME = None
                 PARAM_DICTIONARY['IDENTITY_NAME'] = None
         except Exception as inst:
-            #print(f'ERROR. {str(type(inst))}, {str(inst.args)}, {str(inst)}')
+            # print(f'ERROR. {str(type(inst))}, {str(inst.args)}, {str(inst)}')
             print('APIs are probably not updated to the latest version, generating a new identity')
             IDENTITY_NAME = None
             PARAM_DICTIONARY['IDENTITY_NAME'] = None
@@ -80,7 +84,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
             response = process_single_face(idx_face, j, PARAM_DICTIONARY, TOKEN_DICTIONARY)
         except Exception as inst:
             print(f'type:{type(inst)}, args:{inst.args}, {inst}')
-            print(f'Error in process_single_face')
+            print('Error in process_single_face')
         j = j+1
 
     return True
@@ -91,12 +95,23 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
     STORE_IDENTITY_FLAG = PARAM_DICTIONARY.get('STORE_IDENTITY_FLAG')
 
+    CHANGE_EXPRESSION_FLAG = PARAM_DICTIONARY.get('CHANGE_EXPRESSION_FLAG')
+
     KEYWORDS_LIST = PARAM_DICTIONARY.get('KEYWORDS_LIST')
 
     image_id = PARAM_DICTIONARY.get('IMAGE_ID')
 
     # add a keyword
-    # KEYWORDS_LIST[idx_face]['a'] = {**KEYWORDS_LIST[idx_face]['a'], 'Skin':'highly detailed'}
+    # KEYWORDS_LIST[count]['a'] = {**KEYWORDS_LIST[count]['a'], 'Skin':'highly detailed'}
+
+    if CHANGE_EXPRESSION_FLAG:
+        NEW_EXPRESSION = PARAM_DICTIONARY.get('NEW_EXPRESSION')
+        # replace all the found keywords with the ones only for the expression/gaze/eyes
+        category = find_key_by_value(NEW_EXPRESSION)
+        if category is None:
+            print('No keyword corresponds to the entered new expression value, please check cfe_keywords.py')
+            return False
+        KEYWORDS_LIST[count]['a'] = {category: NEW_EXPRESSION}
 
     keywords_to_send = KEYWORDS_LIST[count]
     keywords_to_send = json.dumps(keywords_to_send.get('a'))
@@ -108,7 +123,7 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     # Asynchronous API call
     response_notifications = handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY)
-    if response_notifications == False:
+    if response_notifications is False:
         # Error
         return False
 
@@ -121,7 +136,7 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     # Store the last generated face as 'pippo'
     if IDENTITY_NAME is None:
         if STORE_IDENTITY_FLAG:
-            new_identity_name = 'pippo' # choose your name, call it afterwards
+            new_identity_name = 'pippo'  # choose your name, call it afterwards
             idx_generation = idx_generation_to_replace[-1]
             # set only the last generated as identity for the future
             response = set_identity_call(image_id, idx_face, idx_generation, keywords_to_send, new_identity_name, TOKEN_DICTIONARY)
@@ -129,9 +144,7 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN_DICTIONARY)
 
     # download the output from EraseID
-    #output_img = open_image_from_url(links[-1])
+    # output_img = open_image_from_url(links[-1])
     print(f'Download the generated image here: {links[-1]}')
 
     return True
-
-
