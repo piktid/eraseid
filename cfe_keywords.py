@@ -4,11 +4,11 @@ cfe_dict = {
   [
     "angry",
     "astonished",
+    "cry",
     "disgusted",
     "fearful", 
     "happy", 
     "pathetic",
-    "sad",
     "surprised", 
     "suspicious", 
   ],
