@@ -91,14 +91,18 @@ def refresh_call(TOKEN_DICTIONARY):
 
 
 # UPLOAD
-def upload_and_detect_call(src_img, HAIR_FACTOR, TOKEN_DICTIONARY):
+def upload_and_detect_call(src_img, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     # upload the image into PiktID's servers
     TOKEN = TOKEN_DICTIONARY.get('access_token', '')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
     src_img_B = im_2_buffer(src_img)
 
-    options = '1'
+    HAIR_FACTOR = PARAM_DICTIONARY.get('HAIR_FACTOR')
+    CHANGE_EXPRESSION_FLAG = PARAM_DICTIONARY.get('CHANGE_EXPRESSION_FLAG')
+    
+    options = '10' if CHANGE_EXPRESSION_FLAG else '1'  # 1 for eraseid, 10 for change expression
+    
     m = MultipartEncoder(
         fields={'options': options, 'flag_hair': str(HAIR_FACTOR), 'flag_sync': '1',
                 'file': ('file', src_img_B, 'text/plain')}

@@ -22,18 +22,17 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
         print(f'Identity: {IDENTITY_NAME} correctly uploaded to PiktID servers')
 
     CHANGE_ALL_FACES = PARAM_DICTIONARY.get('CHANGE_ALL_FACES')
-    HAIR_FACTOR = PARAM_DICTIONARY.get('HAIR_FACTOR')
 
     # upload
     print('Uploading the image')
-    IMAGE_ID, indices_info, selected_faces_list = upload_and_detect_call(input_image, HAIR_FACTOR, TOKEN_DICTIONARY)
+    IMAGE_ID, indices_info, selected_faces_list = upload_and_detect_call(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY)
 
     print(f'image id: {IMAGE_ID}')
 
     PARAM_DICTIONARY = {**PARAM_DICTIONARY, 'IMAGE_ID': IMAGE_ID}
 
     # select the indices of the faces to change
-    idx_faces_comma_separated = (','.join(str(x) for x in range(len(indices_info)))) if CHANGE_ALL_FACES else '0' # use '0,1,2' if you want to modify the first 3 faces
+    idx_faces_comma_separated = (','.join(str(x) for x in range(len(indices_info)))) if CHANGE_ALL_FACES else '0'  # use '0,1,2' if you want to modify the first 3 faces
     print(f'idx_faces_comma_separated:{idx_faces_comma_separated}')
     
     if CHANGE_ALL_FACES:
