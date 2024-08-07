@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.1.1
+# EraseID - v2.2.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -23,7 +23,7 @@ EraseID utilizes generative models to intelligently create real-looking syntheti
 - <ins>Graphic designers</ins>: Enhance your creativity with AI-generated faces. Easy face retouching. Unique faces and expressions. Speed up work.
 - <ins>Photographers</ins>: Edit models with the help of AI. Diversify the portfolio. Adapt faces to customers’ needs.
 
-## Getting Started
+## Getting Started - Random identity
 <a target="_blank" href="https://colab.research.google.com/drive/1dAAswUw9M3h8NAcHJ-ty_-WD6jDrSnwD">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
@@ -41,7 +41,7 @@ $ cd eraseid
 $ pip install -r requirements.txt
 ```
 
-> **Step 2** - Export the email and password as environmental variables
+> **Step 2** - Export the email and password as environmental variables. If you want to authenticate via token, check the colab implementation.
 ```bash
 $ export ERASEID_EMAIL={Your email here}
 $ export ERASEID_PASSWORD={Your password here}
@@ -107,9 +107,17 @@ It is possible to change the default generation parameters, to do that use the c
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --guidance_scale '1.5' --controlnet_scale '0.1' --prompt_strength '0.5'
 ```
 
-## Keep identity (instructions coming soon)
-It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised face.
+## Change facial expression (keeping the identity)
+<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
+It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
+Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
+
+```bash
+$ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
+```
 
 ## Contact
 office@piktid.com
