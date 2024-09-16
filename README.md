@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.2.0
+# EraseID - v2.3.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -119,7 +119,7 @@ Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
 $ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
 ```
 
-## Skin tuner (only for PREMIUM users)
+## Full-body skin tuner (only for PREMIUM users)
 It is now possible to automatically adapt the full-body skin tone to the newly generated face! It is particularly useful when generating different ethnicities. 
 
 ```bash
