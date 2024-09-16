@@ -119,5 +119,12 @@ Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
 $ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
 ```
 
+## Skin tuner (only for PREMIUM users)
+It is now possible to automatically adapt the full-body skin tone to the newly generated face! It is particularly useful when generating different ethnicities. 
+
+```bash
+$ python3 main.py --skin
+```
+
 ## Contact
 office@piktid.com

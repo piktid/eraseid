@@ -1,6 +1,6 @@
 import json
 
-from eraseid_api import open_image_from_url, upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, handle_notifications_new_generation, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from eraseid_api import upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, change_skin_call, handle_notifications_new_generation, handle_notifications_new_skin, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from cfe_keywords import cfe_dict
 
 
@@ -95,6 +95,8 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     CHANGE_EXPRESSION_FLAG = PARAM_DICTIONARY.get('CHANGE_EXPRESSION_FLAG')
 
+    CHANGE_SKIN = PARAM_DICTIONARY.get('CHANGE_SKIN')
+
     KEYWORDS_LIST = PARAM_DICTIONARY.get('KEYWORDS_LIST')
 
     image_id = PARAM_DICTIONARY.get('IMAGE_ID')
@@ -131,6 +133,19 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     idx_generation_to_replace = [get_last_generated_face(list_generated_faces.get('links'), idx_face)]
     print(f'Replace generation {idx_generation_to_replace}')
 
+    if CHANGE_SKIN:
+        for idx_generation in idx_generation_to_replace:
+                
+            print('Editing the skin')
+            response = change_skin_call(image_address=image_id, idx_face=idx_face, idx_generation=idx_generation, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
+            print(f'Skin editing response:{response}')
+
+            # Asynchronous API call
+            response_notifications = handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY)
+            if response_notifications is False:
+                # Error
+                return False
+
     # Store the last generated face as 'pippo'
     if IDENTITY_NAME is None:
         if STORE_IDENTITY_FLAG:
@@ -142,7 +157,6 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN_DICTIONARY)
 
     # download the output from EraseID
-    # output_img = open_image_from_url(links[-1])
     print(f'Download the generated image here: {links[-1]}')
 
     return True

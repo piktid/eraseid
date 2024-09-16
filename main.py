@@ -16,17 +16,23 @@ if __name__ == '__main__':
     parser.add_argument('--url', help='Image file url', type=str, default='https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
     parser.add_argument('--filepath', help='Input image file absolute path', type=str, default=None)
 
+    # Consistent identity parameters
     parser.add_argument('--identity_filepath', help='Input identity file absolute path', type=str, default=None)
     parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
     parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
 
+    # Change expression parameters
     parser.add_argument('--change_expression_flag', help='Change only the facial expression', action='store_true')
     parser.add_argument('--new_expression', help='Desired facial expression', type=str, default='happy')
 
+    # Random generation parameters
     parser.add_argument('--guidance_scale', help='Guidance scale', type=str, default=None)
     parser.add_argument('--prompt_strength', help='Description strength', type=str, default=None)
     parser.add_argument('--controlnet_scale', help='Conditioning scale', type=str, default=None)
     parser.add_argument('--seed', help='Generation seed', type=int, default=randint(0, 100000))
+
+    # Skin parameters
+    parser.add_argument('--skin', help='Change also the skin', action='store_true')
 
     args = parser.parse_args()
 
@@ -52,6 +58,9 @@ if __name__ == '__main__':
     PROMPT_STRENGTH = args.prompt_strength
     CONTROLNET_SCALE = args.controlnet_scale
     SEED = args.seed
+
+    # Skin parameters
+    CHANGE_SKIN = args.skin  # True if also the skin is anonymized
 
     # Image parameters
     URL = args.url 
@@ -100,6 +109,7 @@ if __name__ == '__main__':
             'CONTROLNET_SCALE': CONTROLNET_SCALE,
             'CHANGE_EXPRESSION_FLAG': CHANGE_EXPRESSION_FLAG,
             'NEW_EXPRESSION': NEW_EXPRESSION,
+            'CHANGE_SKIN': CHANGE_SKIN,
         }
 
     response = process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY)
