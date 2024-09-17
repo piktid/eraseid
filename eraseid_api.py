@@ -296,6 +296,36 @@ def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DIC
     return response_json
 
 
+def change_expression_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+
+    SEED = PARAM_DICTIONARY.get('SEED')
+
+    data = {'flag_sync': False, 'id_image': image_address, 'id_face': idx_face, 'prompt': prompt, 'seed': SEED}
+    # data = update_data_generation_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY)
+    print(f'data to send to cfe: {data}')
+
+    # start the generation process given the image parameters
+    TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+    URL_API = TOKEN_DICTIONARY.get('url_api')
+
+    response = requests.post(URL_API+'/ask_new_expression',
+                             headers={'Authorization': 'Bearer '+TOKEN},
+                             json=data,
+                             )
+    # if the access token is expired
+    if response.status_code == 401:
+        TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
+        TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+        # try with new TOKEN
+        response = requests.post(URL_API+'/ask_new_expression',
+                                 headers={'Authorization': 'Bearer '+TOKEN},
+                                 json=data,
+                                 )
+    # print(response.text)
+    response_json = json.loads(response.text)
+    return response_json
+
+
 def change_skin_call(image_address, idx_face, idx_generation, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     data = {'id_image': image_address, 'id_face': idx_face, 'id_generation': idx_generation, 'prompt': prompt}
