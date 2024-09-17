@@ -246,6 +246,27 @@ def update_data_generation_call(data, PARAM_DICTIONARY):
     return data
 
 
+def update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+
+    CUSTOM_PROMPT_FLAG = PARAM_DICTIONARY.get('CUSTOM_PROMPT_FLAG')
+    SEED = PARAM_DICTIONARY.get('SEED')
+
+    if CUSTOM_PROMPT_FLAG is True:
+        # overwrite the keyword mechanism
+        extra_data = {'description_type': 'txt'}
+        data.update(extra_data)
+
+    OPTIONS_DICT = {}
+    if SEED is not None:
+        OPTIONS_DICT = {**OPTIONS_DICT, 'seed': SEED}
+
+    OPTIONS = json.dumps(OPTIONS_DICT)
+    extra_options = {'options': OPTIONS}
+    data.update(extra_options)
+
+    return data
+
+
 def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     SEED = PARAM_DICTIONARY.get('SEED') 
@@ -277,10 +298,9 @@ def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DIC
 
 def change_expression_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
-    FLAG_SYNC = PARAM_DICTIONARY.get('FLAG_SYNC')
     SEED = PARAM_DICTIONARY.get('SEED')
 
-    data = {'flag_sync': FLAG_SYNC, 'id_image': image_address, 'id_face': idx_face, 'prompt': prompt, 'seed': SEED}
+    data = {'flag_sync': False, 'id_image': image_address, 'id_face': idx_face, 'prompt': prompt, 'seed': SEED}
     # data = update_data_generation_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY)
     print(f'data to send to cfe: {data}')
 
@@ -301,7 +321,34 @@ def change_expression_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TO
                                  headers={'Authorization': 'Bearer '+TOKEN},
                                  json=data,
                                  )
-    print(response.text)
+    # print(response.text)
+    response_json = json.loads(response.text)
+    return response_json
+
+
+def change_skin_call(image_address, idx_face, idx_generation, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+
+    data = {'id_image': image_address, 'id_face': idx_face, 'id_generation': idx_generation, 'prompt': prompt}
+    data = update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY)
+    print(f'data to send to skin editing: {data}')
+
+    # start the generation process given the image parameters
+    TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+    URL_API = TOKEN_DICTIONARY.get('url_api')
+
+    response = requests.post(URL_API+'/ask_generate_skin_full_body',
+                             headers={'Authorization': 'Bearer '+TOKEN},
+                             json=data,
+                             )
+    # if the access token is expired
+    if response.status_code == 401:
+        TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
+        TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+        # try with new TOKEN
+        response = requests.post(URL_API+'/ask_generate_skin_full_body',
+                                 headers={'Authorization': 'Bearer '+TOKEN},
+                                 json=data,
+                                 )
     response_json = json.loads(response.text)
     return response_json
 
@@ -470,5 +517,34 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
         # wait
         print('waiting for notification...')
         sleep(60)
+
+    return False, {}
+
+
+def handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY):
+    # check notifications to verify the generation status
+    i = 0
+    while i < 20:  # max 20 iterations -> then timeout
+        i = i+1
+        notifications_list = get_notification_by_name('new_skin', TOKEN_DICTIONARY)
+        notifications_to_remove = [n for n in notifications_list if (n.get('name') == 'new_skin' and n.get('data').get('address') == image_id and n.get('data').get('f') == idx_face and n.get('data').get('msg') == 'done')]
+
+        print(f'notifications_to_remove: {notifications_to_remove}')
+        # remove notifications
+        result_delete = [delete_notification(n.get('id'), TOKEN_DICTIONARY) for n in notifications_to_remove ]
+        # print(result_delete)
+
+        if len(notifications_to_remove) > 0:
+            print(f'replace for face {idx_face} with full skin completed')
+            return True, {**notifications_to_remove[0].get('data', {})}
+
+        # check iteration
+        if i >= 10:
+            print('Timeout. Error in editing skin')
+            return False, {}
+
+        # wait
+        print('waiting for notification...')
+        sleep(30)
 
     return False, {}

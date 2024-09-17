@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.2.0
+# EraseID - v2.3.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -107,7 +107,7 @@ It is possible to change the default generation parameters, to do that use the c
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --guidance_scale '1.5' --controlnet_scale '0.1' --prompt_strength '0.5'
 ```
 
-## Change facial expression (keeping the identity)
+## Change facial expression
 <a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
@@ -117,6 +117,13 @@ Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
 
 ```bash
 $ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
+```
+
+## Full-body skin tuner (BETA)
+It is now possible to automatically adapt the full-body skin tone to the newly generated face! It is particularly useful when generating different ethnicities. 
+
+```bash
+$ python3 main.py --skin
 ```
 
 ## Contact
