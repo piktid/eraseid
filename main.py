@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--hair', help='Change also the hair', action='store_true')
     parser.add_argument('--all_faces', help='Change all the faces in the photo', action='store_true')
-    parser.add_argument('--url', help='Image file url', type=str, default='https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')
+    parser.add_argument('--url', help='Image file url', type=str, default='https://images.piktid.com/frontend/studio/eraseid/free-photo-of-a-woman.webp')
     parser.add_argument('--filepath', help='Input image file absolute path', type=str, default=None)
 
     # Consistent identity parameters
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('--guidance_scale', help='Guidance scale', type=str, default=None)
     parser.add_argument('--prompt_strength', help='Description strength', type=str, default=None)
     parser.add_argument('--controlnet_scale', help='Conditioning scale', type=str, default=None)
-    parser.add_argument('--seed', help='Generation seed', type=int, default=randint(0, 100000))
+    parser.add_argument('--seed', help='Generation seed', type=int, default=randint(0, 1000000))
 
     # Skin parameters
     parser.add_argument('--skin', help='Change also the skin', action='store_true')
