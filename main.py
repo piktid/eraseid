@@ -18,6 +18,7 @@ if __name__ == '__main__':
 
     # Consistent identity parameters
     parser.add_argument('--identity_filepath', help='Input identity file absolute path', type=str, default=None)
+    parser.add_argument('--identity_url', help='Input identity url, use only if no identity path was given', type=str, default=None)
     parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
     parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
 
@@ -46,6 +47,7 @@ if __name__ == '__main__':
 
     # Consistent identity parameters
     IDENTITY_PATH = args.identity_filepath
+    IDENTITY_URL = args.identity_url
     IDENTITY_NAME = args.identity_name  # Default is None, otherwise a string of a stored name
     STORE_IDENTITY_FLAG = args.store_identity  # False if the new identity shall not be saved in the user profile, viceversa True
 
@@ -83,13 +85,15 @@ if __name__ == '__main__':
 
     if IDENTITY_PATH is not None:
         if os.path.exists(IDENTITY_PATH):
-            identity_image = open_image_from_path(IDENTITY_PATH)
             print(f'Using the input identity file located at: {IDENTITY_PATH}')
         else:
-            print('Wrong identity filepath, check again')
-            sys.exit()
+            print('Wrong identity path, check again')
     else:
-        identity_image = None
+        print('Identity path not assigned, check again')
+        if IDENTITY_URL is not None:
+            print(f'Using the input identity located at: {IDENTITY_URL}')
+        else:
+            print('Wrong identity url, check again')
 
     # log in
     TOKEN_DICTIONARY = start_call(EMAIL, PASSWORD)
@@ -100,7 +104,8 @@ if __name__ == '__main__':
             'INPUT_PATH': INPUT_PATH,
             'HAIR_FACTOR': HAIR_FACTOR,
             'CHANGE_ALL_FACES': CHANGE_ALL_FACES,
-            'IDENTITY_IMAGE': identity_image,
+            'IDENTITY_PATH': IDENTITY_PATH,
+            'IDENTITY_URL': IDENTITY_URL,
             'IDENTITY_NAME': IDENTITY_NAME,
             'STORE_IDENTITY_FLAG': STORE_IDENTITY_FLAG,
             'SEED': SEED,

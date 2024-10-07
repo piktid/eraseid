@@ -138,34 +138,40 @@ def upload_and_detect_call(src_img, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     return image_address, indices_info, selected_faces_list
 
 
-def upload_reference_face_call(src_img, identity_name, TOKEN_DICTIONARY):
-    # upload the image into PiktID's servers
+def upload_reference_face_call(PARAM_DICTIONARY, TOKEN_DICTIONARY):
+    IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
+    face_full_path = PARAM_DICTIONARY.get('IDENTITY_PATH')
+    if face_full_path is None:
+        face_url = PARAM_DICTIONARY.get('IDENTITY_URL')
+        face_response = requests.get(face_url)
+        face_response.raise_for_status()  
+        face_file = BytesIO(face_response.content)
+        face_file.name = 'face.jpg' 
+    else:
+        face_file = open(face_full_path, 'rb')
+
+    # start the generation process given the image parameters
     TOKEN = TOKEN_DICTIONARY.get('access_token', '')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
-    src_img_B = im_2_buffer(src_img)
-
-    m = MultipartEncoder(
-                        fields={'identity_name': identity_name, 'file': ('file', src_img_B, 'text/plain')}
-                        )
-
-    response = requests.post(URL_API+'/upload_identity',
-                             headers={"Content-Type": m.content_type,
-                                      'Authorization': 'Bearer '+TOKEN},
-                             data=m,
+    response = requests.post(URL_API+'/consistent_identities/upload_face', 
+                             headers={'Authorization': 'Bearer '+TOKEN},
+                             files={'face': face_file},
+                             data={'identity_name': IDENTITY_NAME},
                              )
-    # if the access token is expired
+
     if response.status_code == 401:
         TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
         TOKEN = TOKEN_DICTIONARY.get('access_token', '')
         # try with new TOKEN
-        response = requests.post(URL_API+'/upload_identity',
-                                 headers={"Content-Type": m.content_type,
-                                          'Authorization': 'Bearer '+TOKEN},
-                                 data=m,
+        response = requests.post(URL_API+'/consistent_identities/upload_face', 
+                                 headers={'Authorization': 'Bearer '+TOKEN},
+                                 files={'face': face_file},
+                                 data={'identity_name': IDENTITY_NAME},
                                  )
-    print(response.content)
+
     response_json = json.loads(response.text)
+
     return response_json
 
 
@@ -248,13 +254,7 @@ def update_data_generation_call(data, PARAM_DICTIONARY):
 
 def update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
-    CUSTOM_PROMPT_FLAG = PARAM_DICTIONARY.get('CUSTOM_PROMPT_FLAG')
     SEED = PARAM_DICTIONARY.get('SEED')
-
-    if CUSTOM_PROMPT_FLAG is True:
-        # overwrite the keyword mechanism
-        extra_data = {'description_type': 'txt'}
-        data.update(extra_data)
 
     OPTIONS_DICT = {}
     if SEED is not None:
@@ -289,6 +289,49 @@ def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DIC
         TOKEN = TOKEN_DICTIONARY.get('access_token', '')
         # try with new TOKEN
         response = requests.post(URL_API+'/ask_generate_faces',
+                                 headers={'Authorization': 'Bearer '+TOKEN},
+                                 json=data,
+                                 )
+    response_json = json.loads(response.text)
+    return response_json
+
+
+def consistent_generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+
+    IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
+
+    SEED = PARAM_DICTIONARY.get('SEED')
+    PROMPT_STRENGTH = PARAM_DICTIONARY.get('PROMPT_STRENGTH')
+
+    OPTIONS_DICT = {}
+
+    if SEED is not None:
+        OPTIONS_DICT = {**OPTIONS_DICT, 'seed': SEED}
+
+    if PROMPT_STRENGTH is not None:
+        OPTIONS_DICT = {**OPTIONS_DICT, 'prompt_strength': PROMPT_STRENGTH}
+
+    OPTIONS = json.dumps(OPTIONS_DICT)
+    extra_options = {'options': OPTIONS}
+
+    data = {'flag_sync': False, 'identity_name': IDENTITY_NAME, 'id_image': image_address, 'id_face': idx_face, 'prompt': prompt}
+    data.update(extra_options)
+    print(f'data to send to generation: {data}')
+
+    # start the generation process given the image parameters
+    TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+    URL_API = TOKEN_DICTIONARY.get('url_api')
+
+    response = requests.post(URL_API+'/consistent_identities/generate',
+                             headers={'Authorization': 'Bearer '+TOKEN},
+                             json=data,
+                             )
+    # if the access token is expired
+    if response.status_code == 401:
+        TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
+        TOKEN = TOKEN_DICTIONARY.get('access_token', '')
+        # try with new TOKEN
+        response = requests.post(URL_API+'/consistent_identities/generate',
                                  headers={'Authorization': 'Bearer '+TOKEN},
                                  json=data,
                                  )
