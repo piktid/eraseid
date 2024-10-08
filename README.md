@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.3.0
+# EraseID - v2.4.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -89,7 +89,7 @@ $ python3 main.py --identity_name 'pippo'
 </a>
 
 It is also possible to use the same real identity from a source image into multiple target photos. To avoid malicious uses, only verified trusted users have access to this feature. If you are interested, please contact us via Discord.
-To use a real identity from a source photo 'mydir/myfile.jpg', use the command:
+To use a real identity from a source photo with local path 'mydir/myfile.jpg', use the command:
 
 ```bash
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname'
@@ -97,14 +97,14 @@ $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfil
 
 The identity will be stored as 'myidentityname' and it will be used as reference input for the target image 'mydir/myfile.jpg'
 
-If you want to swap also the hair, use the command
+If you want to swap also the hair and use an identity located at 'mylink/myfile.jpg', use the command
 ```bash
-$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --hair
+$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_url 'mylink/myfile.jpg' --identity_name 'myidentityname' --hair
 ```
 
-It is possible to change the default generation parameters, to do that use the command (you need to be a premium user)
+It is possible to change the default consistent generation parameters, to do that use the command (you need to be a premium user)
 ```bash
-$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --guidance_scale '1.5' --controlnet_scale '0.1' --prompt_strength '0.5'
+$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength '0.5' --seed 0
 ```
 
 ## Change facial expression

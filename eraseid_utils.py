@@ -1,6 +1,6 @@
 import json
 
-from eraseid_api import upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, change_expression_call, change_skin_call, handle_notifications_new_generation, handle_notifications_new_skin, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from eraseid_api import upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, consistent_generation_call, change_expression_call, change_skin_call, handle_notifications_new_generation, handle_notifications_new_skin, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from cfe_keywords import cfe_dict
 
 
@@ -14,11 +14,12 @@ def find_key_by_value(target_value):
 def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
-    IDENTITY_IMAGE = PARAM_DICTIONARY.get('IDENTITY_IMAGE')
+    IDENTITY_PATH = PARAM_DICTIONARY.get('IDENTITY_PATH')
+    IDENTITY_URL = PARAM_DICTIONARY.get('IDENTITY_URL')
 
     # upload the source identity (swap feature), if any
-    if IDENTITY_IMAGE is not None and IDENTITY_NAME is not None:
-        response = upload_reference_face_call(IDENTITY_IMAGE, IDENTITY_NAME, TOKEN_DICTIONARY)
+    if IDENTITY_NAME is not None and (IDENTITY_PATH is not None or IDENTITY_URL is not None):
+        response = upload_reference_face_call(PARAM_DICTIONARY, TOKEN_DICTIONARY)
         print(f'Identity: {IDENTITY_NAME} correctly uploaded to PiktID servers')
 
     CHANGE_ALL_FACES = PARAM_DICTIONARY.get('CHANGE_ALL_FACES')
@@ -121,6 +122,10 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
         response = change_expression_call(image_address=image_id, idx_face=idx_face, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
         print(f'Cfe response:{response}')
 
+    elif IDENTITY_NAME is not None:
+        print('Swapping faces')
+        response = consistent_generation_call(image_address=image_id, idx_face=idx_face, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
+        print(f'Swap response:{response}')
     else:
         print('Generating new faces')
         response = generation_call(image_address=image_id, idx_face=idx_face, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
