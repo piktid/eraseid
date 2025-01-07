@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.4.0
+# EraseID - v2.4.1
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -68,8 +68,20 @@ If you want to change also the hair and change all the faces in the photo, use t
 $ python3 main.py --hair --all_faces
 ```
 
+## Change facial expression
+<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+It is possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
+Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
+
+```bash
+$ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
+```
+
 ## Consistent identity (swap generated faces)
-It is now possible to use the same generated identity in multiple photos! 
+It is also possible to use the same generated identity in multiple photos! 
 To save the generated identity into your database, use the command:
 
 ```bash
@@ -83,12 +95,12 @@ If you want to reuse 'pippo' in different photos, use the command:
 $ python3 main.py --identity_name 'pippo'
 ```
 
-## Consistent identity (swap real faces, only for VERIFIED users)
+## Consistent identity (swap real faces, see [SwapID](https://github.com/piktid/swapid))
 <a target="_blank" href="https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-It is also possible to use the same real identity from a source image into multiple target photos. To avoid malicious uses, only verified trusted users have access to this feature. If you are interested, please contact us via Discord.
+It is also possible to use the same real identity from a source image into multiple target photos. We *recommend* to visit [SwapID](https://swap.piktid.com) for this particular use case. Since SwapID utilizes the EraseID infrastructure, the results should be identical.
 To use a real identity from a source photo with local path 'mydir/myfile.jpg', use the command:
 
 ```bash
@@ -102,21 +114,9 @@ If you want to swap also the hair and use an identity located at 'mylink/myfile.
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_url 'mylink/myfile.jpg' --identity_name 'myidentityname' --hair
 ```
 
-It is possible to change the default consistent generation parameters, to do that use the command (you need to be a premium user)
+It is possible to change the default consistent generation parameters, to do that use the command
 ```bash
-$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength '0.5' --seed 0
-```
-
-## Change facial expression
-<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
-
-It is now possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
-Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
-
-```bash
-$ python3 main.py --all_faces --change_expression_flag --new_expression EXPRESSION
+$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength '0.55' --seed 0
 ```
 
 ## Full-body skin tuner (BETA)
