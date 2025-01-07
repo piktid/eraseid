@@ -8,7 +8,9 @@ cfe_dict = {
     "disgusted",
     "fearful", 
     "happy", 
+    "neutral",
     "pathetic",
+    "sad",
     "surprised", 
     "suspicious", 
   ],
@@ -22,6 +24,8 @@ cfe_dict = {
   "Gaze": 
   [
     "left", 
-    "right", 
+    "right",
+    "up",
+    "down", 
   ]
 }

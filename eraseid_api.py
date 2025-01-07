@@ -192,7 +192,7 @@ def selection_call(image_id, selected_faces_list, TOKEN_DICTIONARY):
         # try with new TOKEN
         response = requests.post(URL_API+'/selection',
                                  headers={'Authorization': 'Bearer '+TOKEN},
-                                 json={'flag_sync': True, 'id_image': image_id, 'selected_faces':selected_faces_list},
+                                 json={'flag_sync': True, 'id_image': image_id, 'selected_faces': selected_faces_list},
                                  # timeout=100,
                                  )
     response_json = json.loads(response.text)
