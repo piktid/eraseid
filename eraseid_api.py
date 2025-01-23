@@ -1,66 +1,7 @@
 import json
-import base64
 import requests
 from time import sleep
 from io import BytesIO
-from requests_toolbelt import MultipartEncoder
-from PIL import Image, ImageFile, ImageFilter, ImageCms
-
-
-# -----------READ/WRITE FUNCTIONS------------
-def open_image_from_url(url):
-    response = requests.get(url, stream=True)
-    if not response.ok:
-        print(response)
-
-    image = Image.open(BytesIO(response.content))
-    return image
-
-
-def open_image_from_path(path):
-    f = open(path, 'rb')
-    buffer = BytesIO(f.read())
-    image = Image.open(buffer)
-    return image
-
-    return BytesIO(response.content)
-
-
-def im_2_B(image):
-    # Convert Image to buffer
-    buff = BytesIO()
-
-    if image.mode == 'CMYK':
-        image = ImageCms.profileToProfile(image, 'ISOcoated_v2_eci.icc', 'sRGB Color Space Profile.icm', renderingIntent=0, outputMode='RGB')
-
-    image.save(buff, format='PNG', icc_profile=image.info.get('icc_profile'))
-    img_str = buff.getvalue()
-    return img_str
-
-
-def im_2_buffer(image):
-    # Convert Image to bytes 
-    buff = BytesIO()
-
-    if image.mode == 'CMYK':
-        image = ImageCms.profileToProfile(image, 'ISOcoated_v2_eci.icc', 'sRGB Color Space Profile.icm', renderingIntent=0, outputMode='RGB')
-
-    image.save(buff, format='PNG', icc_profile=image.info.get('icc_profile'))
-    return buff
-
-
-def b64_2_img(data):
-    # Convert Base64 to Image
-    buff = BytesIO(base64.b64decode(data))
-    return Image.open(buff)
-  
-
-def im_2_b64(image):
-    # Convert Image 
-    buff = BytesIO()
-    image.save(buff, format='PNG')
-    img_str = base64.b64encode(buff.getvalue()).decode('utf-8')
-    return img_str
 
 
 # -----------PROCESSING FUNCTIONS------------
@@ -91,41 +32,45 @@ def refresh_call(TOKEN_DICTIONARY):
 
 
 # UPLOAD
-def upload_and_detect_call(src_img, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+def upload_and_detect_call(PARAM_DICTIONARY, TOKEN_DICTIONARY):
     # upload the image into PiktID's servers
     TOKEN = TOKEN_DICTIONARY.get('access_token', '')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
-    src_img_B = im_2_buffer(src_img)
+    input_path = PARAM_DICTIONARY.get('INPUT_PATH')
+    if input_path is None:
+        input_url = PARAM_DICTIONARY.get('INPUT_URL')
+        image_response = requests.get(input_url)
+        image_response.raise_for_status()  
+        image_file = BytesIO(image_response.content)
+        image_file.name = 'input.jpg' 
+    else:
+        image_file = open(input_path, 'rb')
 
-    HAIR_FACTOR = PARAM_DICTIONARY.get('HAIR_FACTOR')
+    OPTIONS_DICT = {}
+
+    FLAG_HAIR = PARAM_DICTIONARY.get('FLAG_HAIR')
     CHANGE_EXPRESSION_FLAG = PARAM_DICTIONARY.get('CHANGE_EXPRESSION_FLAG')
+    GENERATION_MODE = 'keep' if CHANGE_EXPRESSION_FLAG else 'random'
     
-    options = '10' if CHANGE_EXPRESSION_FLAG else '1'  # 1 for eraseid, 10 for change expression
-    
-    m = MultipartEncoder(
-        fields={'options': options, 'flag_hair': str(HAIR_FACTOR), 'flag_sync': '1',
-                'file': ('file', src_img_B, 'text/plain')}
-        )
-    
-    response = requests.post(URL_API+'/upload', 
-                             headers={
-                                      'Content-Type': m.content_type,
-                                      'Authorization': 'Bearer '+TOKEN},
-                             data=m,
+    OPTIONS_DICT = {**OPTIONS_DICT, 'flag_sync': True, 'flag_hair': FLAG_HAIR, 'mode': GENERATION_MODE}
+
+    response = requests.post(URL_API+'/upload_pro', 
+                             headers={'Authorization': 'Bearer '+TOKEN},
+                             files={'file': image_file},
+                             data={'options': json.dumps(OPTIONS_DICT)},
                              )
-    # if the access token is expired
+
     if response.status_code == 401:
         TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
         TOKEN = TOKEN_DICTIONARY.get('access_token', '')
         # try with new TOKEN
-        response = requests.post(URL_API+'/upload', 
-                                 headers={
-                                    'Content-Type': m.content_type,
-                                    'Authorization': 'Bearer '+TOKEN
-                                 },
-                                 data=m,
+        response = requests.post(URL_API+'/upload_pro', 
+                                 headers={'Authorization': 'Bearer '+TOKEN},
+                                 files={'file': image_file},
+                                 data={'options': json.dumps(OPTIONS_DICT)},
                                  )
+    
     # if no faces, 405 error
     response_json = json.loads(response.text)
 
@@ -234,7 +179,6 @@ def update_data_generation_call(data, PARAM_DICTIONARY):
     GUIDANCE_SCALE = PARAM_DICTIONARY.get('GUIDANCE_SCALE')
     PROMPT_STRENGTH = PARAM_DICTIONARY.get('PROMPT_STRENGTH')
     CONTROLNET_SCALE = PARAM_DICTIONARY.get('CONTROLNET_SCALE')
-    IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
 
     if GUIDANCE_SCALE is not None:
         data.update({'guidance_scale': GUIDANCE_SCALE})
@@ -244,10 +188,6 @@ def update_data_generation_call(data, PARAM_DICTIONARY):
 
     if CONTROLNET_SCALE is not None:
         data.update({'controlnet_scale': CONTROLNET_SCALE})
-
-    if IDENTITY_NAME is not None:
-        extra_data = {'identity_name': IDENTITY_NAME}
-        data.update(extra_data)
 
     return data
 
@@ -537,7 +477,7 @@ def delete_notification(notification_id, TOKEN_DICTIONARY):
 def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
     # check notifications to verify the generation status
     i = 0
-    while i < 10:  # max 10 iterations -> then timeout
+    while i < 60:  # max 60 iterations -> then timeout
         i = i+1
         notifications = get_notification_by_name('new_generation', TOKEN_DICTIONARY)
                 
@@ -559,7 +499,7 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
 
         # wait
         print('waiting for notification...')
-        sleep(60)
+        sleep(10)
 
     return False, {}
 

@@ -4,7 +4,7 @@ import argparse
 from random import randint
 
 from eraseid_utils import process_single_image
-from eraseid_api import open_image_from_path, open_image_from_url, start_call
+from eraseid_api import start_call
 
 
 if __name__ == '__main__':
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     PASSWORD = os.getenv("ERASEID_PASSWORD")
 
     # Parameters
-    CHANGE_HAIR = args.hair  # False if only the face is anonymized, True if both face and hair
+    FLAG_HAIR = args.hair  # False if only the face is modified, True if both face and hair
     CHANGE_ALL_FACES = args.all_faces  # False if only a subset of the faces in the image need to be anonymize, True if all the faces
 
     # Consistent identity parameters
@@ -65,22 +65,21 @@ if __name__ == '__main__':
     CHANGE_SKIN = args.skin  # True if also the skin is anonymized
 
     # Image parameters
-    URL = args.url 
+    INPUT_URL = args.url 
     INPUT_PATH = args.filepath
 
     if INPUT_PATH is not None:
         if os.path.exists(INPUT_PATH):
-            input_image = open_image_from_path(INPUT_PATH)
             print(f'Using as input image the file located at: {INPUT_PATH}')
         else:
             print('Wrong filepath, check again')
             sys.exit()
     else:
-        try:
-            input_image = open_image_from_url(URL)
-            print(f'Using as input image the file located at: {URL}')
-        except:
-            print('Wrong URL, check again')
+        print('Input filepath not assigned, trying with URL..')
+        if INPUT_URL is not None:
+            print(f'Using the input image located at: {INPUT_URL}')
+        else:
+            print('Wrong input url, check again, exiting..')
             sys.exit()
 
     if IDENTITY_PATH is not None:
@@ -98,11 +97,13 @@ if __name__ == '__main__':
     # log in
     TOKEN_DICTIONARY = start_call(EMAIL, PASSWORD)
 
-    HAIR_FACTOR = 1 if CHANGE_HAIR else 0
+    # we recommend including the hair when changing expression!
+    # FLAG_HAIR = True if CHANGE_EXPRESSION_FLAG else FLAG_HAIR
 
     PARAM_DICTIONARY = {
             'INPUT_PATH': INPUT_PATH,
-            'HAIR_FACTOR': HAIR_FACTOR,
+            'INPUT_URL': INPUT_URL,
+            'FLAG_HAIR': FLAG_HAIR,
             'CHANGE_ALL_FACES': CHANGE_ALL_FACES,
             'IDENTITY_PATH': IDENTITY_PATH,
             'IDENTITY_URL': IDENTITY_URL,
@@ -117,4 +118,4 @@ if __name__ == '__main__':
             'CHANGE_SKIN': CHANGE_SKIN,
         }
 
-    response = process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY)
+    response = process_single_image(PARAM_DICTIONARY, TOKEN_DICTIONARY)

@@ -11,7 +11,7 @@ def find_key_by_value(target_value):
     return None
 
 
-def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+def process_single_image(PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     IDENTITY_NAME = PARAM_DICTIONARY.get('IDENTITY_NAME')
     IDENTITY_PATH = PARAM_DICTIONARY.get('IDENTITY_PATH')
@@ -26,7 +26,7 @@ def process_single_image(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     # upload
     print('Uploading the image')
-    IMAGE_ID, indices_info, selected_faces_list = upload_and_detect_call(input_image, PARAM_DICTIONARY, TOKEN_DICTIONARY)
+    IMAGE_ID, indices_info, selected_faces_list = upload_and_detect_call(PARAM_DICTIONARY, TOKEN_DICTIONARY)
 
     print(f'image id: {IMAGE_ID}')
 

@@ -38,7 +38,6 @@ To use any PiktID API, an access token is required.
 # Installation commands
 $ git clone https://github.com/piktid/eraseid.git
 $ cd eraseid
-$ pip install -r requirements.txt
 ```
 
 > **Step 2** - Export the email and password as environmental variables. If you want to authenticate via token, check the colab implementation.
