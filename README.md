@@ -71,6 +71,8 @@ $ python3 main.py --hair --all_faces
 <a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
+
+[![Discord Follow](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing)
 [![Notion Guide](https://img.shields.io/badge/Notion-Visit%20Page-blue?style=flat)](https://piktid.notion.site/EraseID-Change-Expression-API-Quick-Start-Guide-18162b3ad01f8012b982f383ee0bc3d1)
 
 
