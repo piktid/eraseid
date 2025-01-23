@@ -71,6 +71,8 @@ $ python3 main.py --hair --all_faces
 <a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
+[![Notion Guide](https://img.shields.io/badge/Notion-Visit%20Page-blue?style=flat)](https://piktid.notion.site/EraseID-Change-Expression-API-Quick-Start-Guide-18162b3ad01f8012b982f383ee0bc3d1)
+
 
 It is possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
 Choose the EXPRESSION value from the ones available in `cfe_keywords.py`

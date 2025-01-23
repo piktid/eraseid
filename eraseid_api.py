@@ -492,15 +492,11 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
             print(f'generation for face {idx_face} completed')
             return True, {**notifications_to_remove[0].get('data', {})}
 
-        # check iteration
-        if i >= 10:
-            print('Timeout. Error in generating faces')
-            return False, {}
-
         # wait
         print('waiting for notification...')
         sleep(10)
 
+    print('Timeout. Error in generating faces')
     return False, {}
 
 
@@ -521,13 +517,9 @@ def handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY):
             print(f'replace for face {idx_face} with full skin completed')
             return True, {**notifications_to_remove[0].get('data', {})}
 
-        # check iteration
-        if i >= 10:
-            print('Timeout. Error in editing skin')
-            return False, {}
-
         # wait
         print('waiting for notification...')
         sleep(30)
 
+    print('Timeout. Error in editing skin')
     return False, {}
