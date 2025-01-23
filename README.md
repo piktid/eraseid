@@ -24,9 +24,8 @@ EraseID utilizes generative models to intelligently create real-looking syntheti
 - <ins>Photographers</ins>: Edit models with the help of AI. Diversify the portfolio. Adapt faces to customers’ needs.
 
 ## Getting Started - Random identity
-<a target="_blank" href="https://colab.research.google.com/drive/1dAAswUw9M3h8NAcHJ-ty_-WD6jDrSnwD">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
+[![Colab Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dAAswUw9M3h8NAcHJ-ty_-WD6jDrSnwD)
+
 
 The following instructions suppose you have already installed a recent version of Python. For a general overview, please visit the <a href="https://api.piktid.com/docs">API documentation</a>.
 To use any PiktID API, an access token is required. 
@@ -68,11 +67,7 @@ $ python3 main.py --hair --all_faces
 ```
 
 ## Change facial expression
-<a target="_blank" href="https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
-
-[![Discord Follow](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing)
+[![Colab Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1d6YT3pt7M4bacAgy0zdr-qYjS57KymLw?usp=sharing)
 [![Notion Guide](https://img.shields.io/badge/Notion-Visit%20Page-blue?style=flat)](https://piktid.notion.site/EraseID-Change-Expression-API-Quick-Start-Guide-18162b3ad01f8012b982f383ee0bc3d1)
 
 
@@ -99,9 +94,7 @@ $ python3 main.py --identity_name 'pippo'
 ```
 
 ## Consistent identity (swap real faces, see [SwapID](https://github.com/piktid/swapid))
-<a target="_blank" href="https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
+[![Colab Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing)
 
 It is also possible to use the same real identity from a source image into multiple target photos. We *recommend* to visit [SwapID](https://swap.piktid.com) for this particular use case. Since SwapID utilizes the EraseID infrastructure, the results should be identical.
 To use a real identity from a source photo with local path 'mydir/myfile.jpg', use the command:
