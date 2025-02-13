@@ -1,6 +1,6 @@
 import json
 
-from eraseid_api import upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, generation_call, consistent_generation_call, change_expression_call, change_skin_call, handle_notifications_new_generation, handle_notifications_new_skin, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
+from eraseid_api import upload_and_detect_call, upload_reference_face_call, selection_call, get_identities_call, random_generation_call, consistent_generation_call, change_expression_call, change_skin_call, handle_notifications_new_generation, handle_notifications_new_skin, get_generated_faces, get_last_generated_face, set_identity_call, replace_call
 from cfe_keywords import cfe_dict
 
 
@@ -128,7 +128,7 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
         print(f'Swap response:{response}')
     else:
         print('Generating new faces')
-        response = generation_call(image_address=image_id, idx_face=idx_face, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
+        response = random_generation_call(image_address=image_id, idx_face=idx_face, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
         print(f'Generation response:{response}')
 
     # Asynchronous API call

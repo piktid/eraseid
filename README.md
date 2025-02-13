@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v2.4.1
+# EraseID - v3.0.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -21,7 +21,7 @@ EraseID utilizes generative models to intelligently create real-looking syntheti
 - <ins>Enterprises</ins>: Expand your portfolio and add diversity. Unique high-resolution face replacement and editing. Enhanced variety for stock photos. No model release needed for commercial use.
 - <ins>Marketing</ins>: Customize models and fit them to any market. Adapt models for targeted campaigns worldwide. Use photos without model release for commercial purposes. Retarget advertising photos for specific groups. 
 - <ins>Graphic designers</ins>: Enhance your creativity with AI-generated faces. Easy face retouching. Unique faces and expressions. Speed up work.
-- <ins>Photographers</ins>: Edit models with the help of AI. Diversify the portfolio. Adapt faces to customers’ needs.
+- <ins>Photographers</ins>: Edit models with the help of AI. Diversify the portfolio. Adapt faces to customers' needs.
 
 ## Getting Started - Random identity
 [![Colab Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1dAAswUw9M3h8NAcHJ-ty_-WD6jDrSnwD)
@@ -64,6 +64,18 @@ If you want to change also the hair and change all the faces in the photo, use t
 
 ```bash
 $ python3 main.py --hair --all_faces
+```
+
+You can fine-tune the generation process using the following parameters:
+- `--guidance_scale`: Float value between 1 and 20 that controls the guidance scale
+- `--prompt_strength`: Float value between 0 and 1 that controls the diversity of generated faces
+- `--var_strength`: Float value between 0 and 1 that controls the creativity of generated faces
+- `--controlnet_scale`: Float value between 0 and 2 that controls the conditioning scale
+- `--seed`: Integer value for generation seed (default: random between 1 and 1000000)
+
+For example, for a more creative generation, you can use:
+```bash
+$ python3 main.py --hair --all_faces --prompt_strength 0.8 --var_strength 0.8
 ```
 
 ## Change facial expression
@@ -112,7 +124,7 @@ $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_url 'mylink/myfile.jp
 
 It is possible to change the default consistent generation parameters, to do that use the command
 ```bash
-$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength '0.55' --seed 0
+$ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength 0.55 --seed 0
 ```
 
 ## Full-body skin tuner (BETA)

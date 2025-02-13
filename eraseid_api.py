@@ -173,26 +173,41 @@ def get_identities_call(TOKEN_DICTIONARY):
 
 
 # GENERATE NEW FACES
-def update_data_generation_call(data, PARAM_DICTIONARY):
-    # update the json data first
+def update_data_random_generation_call(data, PARAM_DICTIONARY):
 
+    SEED = PARAM_DICTIONARY.get('SEED')
     GUIDANCE_SCALE = PARAM_DICTIONARY.get('GUIDANCE_SCALE')
     PROMPT_STRENGTH = PARAM_DICTIONARY.get('PROMPT_STRENGTH')
     CONTROLNET_SCALE = PARAM_DICTIONARY.get('CONTROLNET_SCALE')
+    VAR_STRENGTH = PARAM_DICTIONARY.get('VAR_STRENGTH')
+
+    if SEED is not None:
+        # overwrite the keyword mechanism
+        extra_data = {'seed': SEED}
+        data.update(extra_data)
+
+    OPTIONS_DICT = {}
 
     if GUIDANCE_SCALE is not None:
-        data.update({'guidance_scale': GUIDANCE_SCALE})
-        
+        OPTIONS_DICT = {**OPTIONS_DICT, 'guidance_scale': GUIDANCE_SCALE}
+
     if PROMPT_STRENGTH is not None:
-        data.update({'prompt_strength': PROMPT_STRENGTH})
+        OPTIONS_DICT = {**OPTIONS_DICT, 'prompt_strength': PROMPT_STRENGTH}
 
     if CONTROLNET_SCALE is not None:
-        data.update({'controlnet_scale': CONTROLNET_SCALE})
+        OPTIONS_DICT = {**OPTIONS_DICT, 'controlnet_scale': CONTROLNET_SCALE}
+    
+    if VAR_STRENGTH is not None:
+        OPTIONS_DICT = {**OPTIONS_DICT, 'var_strength': VAR_STRENGTH}
+
+    OPTIONS = json.dumps(OPTIONS_DICT)
+    extra_options = {'options': OPTIONS}
+    data.update(extra_options)
 
     return data
 
 
-def update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+def update_data_skin_call(data, PARAM_DICTIONARY):
 
     SEED = PARAM_DICTIONARY.get('SEED')
 
@@ -207,19 +222,17 @@ def update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     return data
 
 
-def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
+def random_generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
-    SEED = PARAM_DICTIONARY.get('SEED') 
-
-    data = {'id_image': image_address, 'id_face': idx_face, 'prompt': prompt, 'seed': SEED}
-    data = update_data_generation_call(data, PARAM_DICTIONARY)
+    data = {'id_image': image_address, 'id_face': idx_face, 'prompt': prompt}
+    data = update_data_random_generation_call(data, PARAM_DICTIONARY)
     print(f'data to send to generation: {data}')
 
     # start the generation process given the image parameters
     TOKEN = TOKEN_DICTIONARY.get('access_token', '')
     URL_API = TOKEN_DICTIONARY.get('url_api')
 
-    response = requests.post(URL_API+'/ask_generate_faces',
+    response = requests.post(URL_API+'/ask_random_face',
                              headers={'Authorization': 'Bearer '+TOKEN},
                              json=data,
                              )
@@ -228,10 +241,11 @@ def generation_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TOKEN_DIC
         TOKEN_DICTIONARY = refresh_call(TOKEN_DICTIONARY)
         TOKEN = TOKEN_DICTIONARY.get('access_token', '')
         # try with new TOKEN
-        response = requests.post(URL_API+'/ask_generate_faces',
+        response = requests.post(URL_API+'/ask_random_face',
                                  headers={'Authorization': 'Bearer '+TOKEN},
                                  json=data,
                                  )
+    # print(response.text)
     response_json = json.loads(response.text)
     return response_json
 
@@ -284,7 +298,6 @@ def change_expression_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TO
     SEED = PARAM_DICTIONARY.get('SEED')
 
     data = {'flag_sync': False, 'id_image': image_address, 'id_face': idx_face, 'prompt': prompt, 'seed': SEED}
-    # data = update_data_generation_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY)
     print(f'data to send to cfe: {data}')
 
     # start the generation process given the image parameters
@@ -312,7 +325,7 @@ def change_expression_call(image_address, idx_face, prompt, PARAM_DICTIONARY, TO
 def change_skin_call(image_address, idx_face, idx_generation, prompt, PARAM_DICTIONARY, TOKEN_DICTIONARY):
 
     data = {'id_image': image_address, 'id_face': idx_face, 'id_generation': idx_generation, 'prompt': prompt}
-    data = update_data_skin_call(data, PARAM_DICTIONARY, TOKEN_DICTIONARY)
+    data = update_data_skin_call(data, PARAM_DICTIONARY)
     print(f'data to send to skin editing: {data}')
 
     # start the generation process given the image parameters
