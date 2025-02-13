@@ -7,6 +7,14 @@ from eraseid_utils import process_single_image
 from eraseid_api import start_call
 
 
+def restricted_float(min_val, max_val):
+    def validate(value):
+        value = float(value)
+        if value < min_val or value > max_val:
+            raise argparse.ArgumentTypeError(f"Value must be between {min_val} and {max_val}")
+        return value
+    return validate
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
@@ -19,7 +27,7 @@ if __name__ == '__main__':
     # Consistent identity parameters
     parser.add_argument('--identity_filepath', help='Input identity file absolute path', type=str, default=None)
     parser.add_argument('--identity_url', help='Input identity url, use only if no identity path was given', type=str, default=None)
-    parser.add_argument('--identity_name', help='Use the face from the stored identities', default=None)
+    parser.add_argument('--identity_name', help='Use the face from the stored identities', type=str, default=None)
     parser.add_argument('--store_identity', help='Save the generated identity under the name pippo', action='store_true')
 
     # Change expression parameters
@@ -27,10 +35,11 @@ if __name__ == '__main__':
     parser.add_argument('--new_expression', help='Desired facial expression', type=str, default='happy')
 
     # Random generation parameters
-    parser.add_argument('--guidance_scale', help='Guidance scale', type=str, default=None)
-    parser.add_argument('--prompt_strength', help='Description strength', type=str, default=None)
-    parser.add_argument('--controlnet_scale', help='Conditioning scale', type=str, default=None)
-    parser.add_argument('--seed', help='Generation seed', type=int, default=randint(0, 1000000))
+    parser.add_argument('--prompt_strength', help='Diversity of the generated faces (range 0-1)', type=restricted_float(0, 1), default=None)
+    parser.add_argument('--var_strength', help='Creativity of the generated faces (range 0-1)', type=restricted_float(0, 1), default=None)
+    parser.add_argument('--guidance_scale', help='Guidance scale (range 1-20)', type=restricted_float(1, 20), default=None)
+    parser.add_argument('--controlnet_scale', help='Conditioning scale (range 0-2)', type=restricted_float(0, 2), default=None)
+    parser.add_argument('--seed', help='Generation seed', type=int, default=randint(1, 1000000))
 
     # Skin parameters
     parser.add_argument('--skin', help='Change also the skin', action='store_true')
@@ -58,6 +67,7 @@ if __name__ == '__main__':
     # Generation parameters
     GUIDANCE_SCALE = args.guidance_scale
     PROMPT_STRENGTH = args.prompt_strength
+    VAR_STRENGTH = args.var_strength
     CONTROLNET_SCALE = args.controlnet_scale
     SEED = args.seed
 
@@ -112,6 +122,7 @@ if __name__ == '__main__':
             'SEED': SEED,
             'GUIDANCE_SCALE': GUIDANCE_SCALE,
             'PROMPT_STRENGTH': PROMPT_STRENGTH,
+            'VAR_STRENGTH': VAR_STRENGTH,
             'CONTROLNET_SCALE': CONTROLNET_SCALE,
             'CHANGE_EXPRESSION_FLAG': CHANGE_EXPRESSION_FLAG,
             'NEW_EXPRESSION': NEW_EXPRESSION,
