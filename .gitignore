@@ -1,3 +1,17 @@
 .DS_Store
 __pycache__
 __pycache__/
+
+# Image and media files
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.mp4
+*.PNG
+*.JPG
+*.JPEG
+*.WEBP
+*.GIF
+*.MP4

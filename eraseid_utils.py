@@ -143,19 +143,6 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
     idx_generation_to_replace = [get_last_generated_face(list_generated_faces.get('links'), idx_face)]
     print(f'Replace generation {idx_generation_to_replace}')
 
-    if CHANGE_SKIN:
-        for idx_generation in idx_generation_to_replace:
-                
-            print('Editing the skin')
-            response = change_skin_call(image_address=image_id, idx_face=idx_face, idx_generation=idx_generation, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
-            print(f'Skin editing response:{response}')
-
-            # Asynchronous API call
-            response_notifications = handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY)
-            if response_notifications is False:
-                # Error
-                return False
-
     # Store the last generated face as 'pippo'
     if IDENTITY_NAME is None:
         if STORE_IDENTITY_FLAG:
@@ -164,7 +151,21 @@ def process_single_face(idx_face, count, PARAM_DICTIONARY, TOKEN_DICTIONARY):
             # set only the last generated as identity for the future
             response = set_identity_call(image_id, idx_face, idx_generation, keywords_to_send, new_identity_name, TOKEN_DICTIONARY)
 
-    links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN_DICTIONARY)
+    if CHANGE_SKIN:
+        for idx_generation in idx_generation_to_replace:
+                
+            print('Editing the skin')
+            response = change_skin_call(image_address=image_id, idx_face=idx_face, idx_generation=idx_generation, prompt=keywords_to_send, PARAM_DICTIONARY=PARAM_DICTIONARY, TOKEN_DICTIONARY=TOKEN_DICTIONARY)
+            print(f'Skin editing response:{response}')
+
+            # Asynchronous API call
+            response_notifications, skin_data = handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY)
+            if response_notifications is False:
+                # Error
+                return False
+            links = [((skin_data.get("link"))[0]).get("l")]
+    else:
+        links = replace_call(image_id, idx_face, idx_generation_to_replace, TOKEN_DICTIONARY)
 
     # download the output from EraseID
     print(f'Download the generated image here: {links[-1]}')

@@ -15,6 +15,7 @@ def restricted_float(min_val, max_val):
         return value
     return validate
 
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()

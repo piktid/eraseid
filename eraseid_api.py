@@ -516,7 +516,7 @@ def handle_notifications_new_generation(image_id, idx_face, TOKEN_DICTIONARY):
 def handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY):
     # check notifications to verify the generation status
     i = 0
-    while i < 20:  # max 20 iterations -> then timeout
+    while i < 60:  # max 60 iterations -> then timeout
         i = i+1
         notifications_list = get_notification_by_name('new_skin', TOKEN_DICTIONARY)
         notifications_to_remove = [n for n in notifications_list if (n.get('name') == 'new_skin' and n.get('data').get('address') == image_id and n.get('data').get('f') == idx_face and n.get('data').get('msg') == 'done')]
@@ -532,7 +532,7 @@ def handle_notifications_new_skin(image_id, idx_face, TOKEN_DICTIONARY):
 
         # wait
         print('waiting for notification...')
-        sleep(30)
+        sleep(10)
 
     print('Timeout. Error in editing skin')
     return False, {}

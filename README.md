@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v3.0.1
+# EraseID - v3.0.2
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -127,8 +127,8 @@ It is possible to change the default consistent generation parameters, to do tha
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength 0.55 --seed 0
 ```
 
-## Full-body skin tuner (BETA)
-It is now possible to automatically adapt the full-body skin tone to the newly generated face! It is particularly useful when generating different ethnicities. 
+## Full-body skin generation
+It is now possible to automatically generate coherent full-body skin for the newly generated face! It is particularly useful when generating different ethnicities. 
 
 ```bash
 $ python3 main.py --skin
