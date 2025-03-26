@@ -127,8 +127,8 @@ It is possible to change the default consistent generation parameters, to do tha
 $ python3 main.py --filepath 'mydir/myfile.jpg' --identity_filepath 'mydir/myfile.jpg' --identity_name 'myidentityname' --prompt_strength 0.55 --seed 0
 ```
 
-## Full-body skin tuner (BETA)
-It is now possible to automatically adapt the full-body skin tone to the newly generated face! It is particularly useful when generating different ethnicities. 
+## Full-body skin generation
+It is now possible to automatically generate coherent full-body skin for the newly generated face! It is particularly useful when generating different ethnicities. 
 
 ```bash
 $ python3 main.py --skin
