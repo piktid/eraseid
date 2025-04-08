@@ -5,7 +5,7 @@
 </p>
 
 
-# EraseID - v3.0.2
+# EraseID - v3.0.3
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -30,7 +30,7 @@ EraseID utilizes generative models to intelligently create real-looking syntheti
 The following instructions suppose you have already installed a recent version of Python. For a general overview, please visit the <a href="https://api.piktid.com/docs">API documentation</a>.
 To use any PiktID API, an access token is required. 
 
-> **Step 0** - Register <a href="https://id.piktid.com">here</a>. 10 credits are given for free to all new users.
+> **Step 0** - Register <a href="https://studio.piktid.com">here</a>. 10 credits are given for free to all new users.
 
 > **Step 1** - Clone the EraseID library
 ```bash
