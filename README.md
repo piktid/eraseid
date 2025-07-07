@@ -1,11 +1,11 @@
 <p align="center">
   <img src="https://id.piktid.com/logo.svg" alt="EraseID by PiktID logo" width="150">
   </br>
-  <h3 align="center"><a href="[https://id.piktid.com](https://id.piktid.com)">EraseID by PiktID</a></h3>
+  <h3 align="center"><a href="[https://studio.piktid.com](https://studio.piktid.com)">EraseID by PiktID</a></h3>
 </p>
 
 
-# EraseID - v3.0.3
+# EraseID - v3.1.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
@@ -83,7 +83,7 @@ $ python3 main.py --hair --all_faces --prompt_strength 0.8 --var_strength 0.8
 [![Notion Guide](https://img.shields.io/badge/Notion-Visit%20Page-blue?style=flat)](https://piktid.notion.site/EraseID-Change-Expression-API-Quick-Start-Guide-18162b3ad01f8012b982f383ee0bc3d1)
 
 
-It is possible to edit the original identity in your photos! Use keywords to add a smile or create a surprised look on all the faces.
+It is possible to edit the original identity in your photos! Use keywords to add open closed eyes, add a smile or create a surprised look on all the faces.
 Choose the EXPRESSION value from the ones available in `cfe_keywords.py`
 
 ```bash
@@ -108,7 +108,7 @@ $ python3 main.py --identity_name 'pippo'
 ## Consistent identity (swap real faces, see [SwapID](https://github.com/piktid/swapid))
 [![Colab Notebook](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1N_PMMvNJV9UnfRP3p8hFBpGMgv_qYXHL?usp=sharing)
 
-It is also possible to use the same real identity from a source image into multiple target photos. We *recommend* to visit [SwapID](https://swap.piktid.com) for this particular use case. Since SwapID utilizes the EraseID infrastructure, the results should be identical.
+It is also possible to use the same real identity from a source image into multiple target photos. We *recommend* to visit [SwapID](https://studio.piktid.com/swap) for this particular use case. Since SwapID utilizes the EraseID infrastructure, the results should be identical.
 To use a real identity from a source photo with local path 'mydir/myfile.jpg', use the command:
 
 ```bash
