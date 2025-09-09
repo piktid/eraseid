@@ -5,11 +5,11 @@
 </p>
 
 
-# EraseID - v3.1.0
+# EraseID - v3.2.0
 [![Official Website](https://img.shields.io/badge/Official%20Website-piktid.com-blue?style=flat&logo=world&logoColor=white)](https://piktid.com)
 [![Discord Follow](https://dcbadge.vercel.app/api/server/FJU39e9Z4P?style=flat)](https://discord.com/invite/FJU39e9Z4P)
 
-EraseID is an AI face changer and anonymizer. 
+EraseID is an AI face editor and anonymizer. 
 It automatically changes and replaces faces in existing images based on users' inputs, enabling full control of all human identities.
 
 [![How does EraseID work?](http://i3.ytimg.com/vi/REQsqVu-L7I/hqdefault.jpg)](https://www.youtube.com/watch?v=REQsqVu-L7I)
